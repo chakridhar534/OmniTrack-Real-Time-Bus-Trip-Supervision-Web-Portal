@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — OmniTrack</title>
+  <meta name="description" content="Sign up for OmniTrack to start tracking your RGM College bus. Create your account as a student or driver." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230ea5e9'/%3E%3Cstop offset='100%25' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'%3EOT%3C/text%3E%3C/svg%3E" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-animated">
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+  </div>
+  <div class="bg-grid"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__brand">
+        <div class="navbar__logo">
+          <i class="fa-solid fa-route"></i>
+        </div>
+        <span class="navbar__name">OmniTrack</span>
+      </a>
+
+      <button class="navbar__toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="navbar__links" id="navLinks">
+        <li><a href="index.html" class="navbar__link">Home</a></li>
+        <li><a href="dashboard.html" class="navbar__link"><i class="fa-solid fa-satellite-dish" style="color: var(--primary); margin-right: 4px;"></i> Live Tracker</a></li>
+        <li><a href="login.html" class="navbar__link navbar__link--outline">Login</a></li>
+        <li><a href="signup.html" class="navbar__link navbar__link--primary active">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Auth Layout: Split Screen -->
+  <div class="auth-layout">
+
+    <!-- Left: Hero Panel -->
+    <aside class="auth-hero">
+      <div class="auth-hero__content">
+        <div class="auth-hero__icon">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+
+        <h2 class="auth-hero__title">Join OmniTrack</h2>
+        <p class="auth-hero__subtitle">
+          Create your account and start tracking your college bus instantly. Available for both students and drivers.
+        </p>
+
+        <div class="auth-hero__features">
+          <div class="auth-hero__feature">
+            <i class="fa-solid fa-bus"></i>
+            <span>3 bus routes: RGM-3rdYear, 4thYear, Shantiram</span>
+          </div>
+          <div class="auth-hero__feature">
+            <i class="fa-solid fa-map-pin"></i>
+            <span>20+ stops across Kurnool city</span>
+          </div>
+          <div class="auth-hero__feature">
+            <i class="fa-solid fa-user-gear"></i>
+            <span>Student & Driver roles with unique dashboards</span>
+          </div>
+          <div class="auth-hero__feature">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Set up in under 30 seconds</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right: Signup Form -->
+    <main class="auth-form-panel">
+      <div class="auth-card auth-card--wide" role="main">
+
+        <div class="auth-card__header">
+          <h1 class="auth-card__title">Create Account</h1>
+          <p class="auth-card__subtitle">Fill in your details to get started</p>
+        </div>
+
+        <form action="/auth/signup" method="POST" id="signupForm" novalidate>
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="name" class="form-label">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-input"
+              placeholder="Enter your full name"
+              required
+              autocomplete="name"
+            />
+            <span class="form-error">Full name is required</span>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="you@example.com"
+              required
+              autocomplete="email"
+            />
+            <span class="form-error">Please enter a valid email address</span>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-input"
+                placeholder="Min. 6 characters"
+                required
+                autocomplete="new-password"
+                minlength="6"
+              />
+              <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  style="display: none;">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a19.8 19.8 0 0 1 5.06-6.94" />
+                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
+                </svg>
+              </button>
+            </div>
+            <span class="form-error">Password must be at least 6 characters</span>
+          </div>
+
+          <!-- Role Selection -->
+          <div class="form-group">
+            <label for="role" class="form-label">I am a</label>
+            <select name="role" id="role" class="form-select" required>
+              <option value="USER">Student / User</option>
+              <option value="DRIVER">Bus Driver</option>
+            </select>
+          </div>
+
+          <!-- ========== DRIVER FIELDS ========== -->
+          <div id="driver-fields" class="conditional-fields">
+            <div class="section-label">
+              <i class="fa-solid fa-id-badge" style="margin-right: 4px;"></i>
+              Driver Details
+            </div>
+
+            <div class="form-group">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="form-input"
+                placeholder="Driver phone number"
+                autocomplete="tel"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="assignedBus" class="form-label">Assigned Bus</label>
+              <select name="assignedBus" id="assignedBus" class="form-select">
+                <option value="">— Select Assigned Bus —</option>
+                <option value="rgm-1styear-001">RGM-1stYear</option>
+                <option value="rgm-2ndyear-001">RGM-2ndYear</option>
+                <option value="rgm-3rdyear-001">RGM-3rdYear</option>
+                <option value="rgm-4thyear-001">RGM-4thYear</option>
+                <option value="69134ab02313225bf5905fdc">Shantiram-45</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ========== USER / STUDENT FIELDS ========== -->
+          <div id="user-bus-fields" class="conditional-fields">
+            <div class="section-label">
+              <i class="fa-solid fa-bus" style="margin-right: 4px;"></i>
+              Select Your Bus & Stop
+            </div>
+
+            <div class="form-group">
+              <label for="busSelect" class="form-label">Your Bus Route</label>
+              <select name="busName" id="busSelect" class="form-select">
+                <option value="">— Select Your Bus —</option>
+                <option value="rgm-1styear-001">RGM-1stYear</option>
+                <option value="rgm-2ndyear-001">RGM-2ndYear</option>
+                <option value="rgm-3rdyear-001">RGM-3rdYear</option>
+                <option value="rgm-4thyear-001">RGM-4thYear</option>
+                <option value="69134ab02313225bf5905fdc">Shantiram-45</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="user-stop-fields" class="conditional-fields">
+            <div class="form-group">
+              <label for="stopSelect" class="form-label">Your Stop</label>
+              <select name="stopName" id="stopSelect" class="form-select">
+                <option value="">— Select Your Stop —</option>
+
+                <!-- ===== RGM-1stYear Stops ===== -->
+                <option value="rgm1y-stop-01" data-bus="rgm-1styear-001">KondaReddy Fort</option>
+                <option value="rgm1y-stop-02" data-bus="rgm-1styear-001">Control Room</option>
+                <option value="rgm1y-stop-03" data-bus="rgm-1styear-001">Sv Complex</option>
+                <option value="rgm1y-stop-04" data-bus="rgm-1styear-001">Railway Station Road</option>
+                <option value="rgm1y-stop-05" data-bus="rgm-1styear-001">Rajhvihar</option>
+                <option value="rgm1y-stop-06" data-bus="rgm-1styear-001">Kurnool Medical College</option>
+                <option value="rgm1y-stop-07" data-bus="rgm-1styear-001">Collector Office</option>
+                <option value="rgm1y-stop-08" data-bus="rgm-1styear-001">Gayathri Estates</option>
+                <option value="rgm1y-stop-09" data-bus="rgm-1styear-001">Maddur Nagar</option>
+                <option value="rgm1y-stop-10" data-bus="rgm-1styear-001">C Camp</option>
+                <option value="rgm1y-stop-11" data-bus="rgm-1styear-001">Amma Hospital</option>
+                <option value="rgm1y-stop-12" data-bus="rgm-1styear-001">Nandyal Checkpost</option>
+                <option value="rgm1y-stop-13" data-bus="rgm-1styear-001">Maruthi Mega City</option>
+                <option value="rgm1y-stop-14" data-bus="rgm-1styear-001">G. Pullareddy Engineering College</option>
+                <option value="rgm1y-stop-15" data-bus="rgm-1styear-001">B. Thandrapadu</option>
+                <option value="rgm1y-stop-16" data-bus="rgm-1styear-001">B. Thandrapadu Lake View</option>
+                <option value="rgm1y-stop-17" data-bus="rgm-1styear-001">Raaga Mayuri Resorts</option>
+                <option value="rgm1y-stop-18" data-bus="rgm-1styear-001">Nannur</option>
+                <option value="rgm1y-stop-19" data-bus="rgm-1styear-001">RGM College</option>
+                <!-- ===== RGM-2ndYear Stops ===== -->
+                <option value="rgm2y-stop-01" data-bus="rgm-2ndyear-001">KondaReddy Fort</option>
+                <option value="rgm2y-stop-02" data-bus="rgm-2ndyear-001">Control Room</option>
+                <option value="rgm2y-stop-03" data-bus="rgm-2ndyear-001">Sv Complex</option>
+                <option value="rgm2y-stop-04" data-bus="rgm-2ndyear-001">Railway Station Road</option>
+                <option value="rgm2y-stop-05" data-bus="rgm-2ndyear-001">Rajhvihar</option>
+                <option value="rgm2y-stop-06" data-bus="rgm-2ndyear-001">Kurnool Medical College</option>
+                <option value="rgm2y-stop-07" data-bus="rgm-2ndyear-001">Collector Office</option>
+                <option value="rgm2y-stop-08" data-bus="rgm-2ndyear-001">Gayathri Estates</option>
+                <option value="rgm2y-stop-09" data-bus="rgm-2ndyear-001">Maddur Nagar</option>
+                <option value="rgm2y-stop-10" data-bus="rgm-2ndyear-001">C Camp</option>
+                <option value="rgm2y-stop-11" data-bus="rgm-2ndyear-001">Amma Hospital</option>
+                <option value="rgm2y-stop-12" data-bus="rgm-2ndyear-001">Nandyal Checkpost</option>
+                <option value="rgm2y-stop-13" data-bus="rgm-2ndyear-001">Maruthi Mega City</option>
+                <option value="rgm2y-stop-14" data-bus="rgm-2ndyear-001">G. Pullareddy Engineering College</option>
+                <option value="rgm2y-stop-15" data-bus="rgm-2ndyear-001">B. Thandrapadu</option>
+                <option value="rgm2y-stop-16" data-bus="rgm-2ndyear-001">B. Thandrapadu Lake View</option>
+                <option value="rgm2y-stop-17" data-bus="rgm-2ndyear-001">Raaga Mayuri Resorts</option>
+                <option value="rgm2y-stop-18" data-bus="rgm-2ndyear-001">Nannur</option>
+                <option value="rgm2y-stop-19" data-bus="rgm-2ndyear-001">RGM College</option>
+                <!-- ===== RGM-3rdYear Stops ===== -->
+                <option value="rgm3y-stop-01" data-bus="rgm-3rdyear-001">KondaReddy Fort</option>
+                <option value="rgm3y-stop-02" data-bus="rgm-3rdyear-001">Control Room</option>
+                <option value="rgm3y-stop-03" data-bus="rgm-3rdyear-001">Sv Complex</option>
+                <option value="rgm3y-stop-04" data-bus="rgm-3rdyear-001">Railway Station Road</option>
+                <option value="rgm3y-stop-05" data-bus="rgm-3rdyear-001">Rajhvihar</option>
+                <option value="rgm3y-stop-06" data-bus="rgm-3rdyear-001">Kurnool Medical College</option>
+                <option value="rgm3y-stop-07" data-bus="rgm-3rdyear-001">Collector Office</option>
+                <option value="rgm3y-stop-08" data-bus="rgm-3rdyear-001">Gayathri Estates</option>
+                <option value="rgm3y-stop-09" data-bus="rgm-3rdyear-001">Maddur Nagar</option>
+                <option value="rgm3y-stop-10" data-bus="rgm-3rdyear-001">C Camp</option>
+                <option value="rgm3y-stop-11" data-bus="rgm-3rdyear-001">Amma Hospital</option>
+                <option value="rgm3y-stop-12" data-bus="rgm-3rdyear-001">Nandyal Checkpost</option>
+                <option value="rgm3y-stop-13" data-bus="rgm-3rdyear-001">Maruthi Mega City</option>
+                <option value="rgm3y-stop-14" data-bus="rgm-3rdyear-001">G. Pullareddy Engineering College</option>
+                <option value="rgm3y-stop-15" data-bus="rgm-3rdyear-001">B. Thandrapadu</option>
+                <option value="rgm3y-stop-16" data-bus="rgm-3rdyear-001">B. Thandrapadu Lake View</option>
+                <option value="rgm3y-stop-17" data-bus="rgm-3rdyear-001">Raaga Mayuri Resorts</option>
+                <option value="rgm3y-stop-18" data-bus="rgm-3rdyear-001">Nannur</option>
+                <option value="rgm3y-stop-19" data-bus="rgm-3rdyear-001">RGM College</option>
+                <!-- ===== RGM-4thYear Stops ===== -->
+                <option value="rgm4y-stop-01" data-bus="rgm-4thyear-001">KondaReddy Fort</option>
+                <option value="rgm4y-stop-02" data-bus="rgm-4thyear-001">Control Room</option>
+                <option value="rgm4y-stop-03" data-bus="rgm-4thyear-001">Sv Complex</option>
+                <option value="rgm4y-stop-04" data-bus="rgm-4thyear-001">Railway Station Road</option>
+                <option value="rgm4y-stop-05" data-bus="rgm-4thyear-001">Rajhvihar</option>
+                <option value="rgm4y-stop-06" data-bus="rgm-4thyear-001">Kurnool Medical College</option>
+                <option value="rgm4y-stop-07" data-bus="rgm-4thyear-001">Collector Office</option>
+                <option value="rgm4y-stop-08" data-bus="rgm-4thyear-001">Gayathri Estates</option>
+                <option value="rgm4y-stop-09" data-bus="rgm-4thyear-001">Maddur Nagar</option>
+                <option value="rgm4y-stop-10" data-bus="rgm-4thyear-001">C Camp</option>
+                <option value="rgm4y-stop-11" data-bus="rgm-4thyear-001">Amma Hospital</option>
+                <option value="rgm4y-stop-12" data-bus="rgm-4thyear-001">Nandyal Checkpost</option>
+                <option value="rgm4y-stop-13" data-bus="rgm-4thyear-001">Maruthi Mega City</option>
+                <option value="rgm4y-stop-14" data-bus="rgm-4thyear-001">G. Pullareddy Engineering College</option>
+                <option value="rgm4y-stop-15" data-bus="rgm-4thyear-001">B. Thandrapadu</option>
+                <option value="rgm4y-stop-16" data-bus="rgm-4thyear-001">B. Thandrapadu Lake View</option>
+                <option value="rgm4y-stop-17" data-bus="rgm-4thyear-001">Raaga Mayuri Resorts</option>
+                <option value="rgm4y-stop-18" data-bus="rgm-4thyear-001">Nannur</option>
+                <option value="rgm4y-stop-19" data-bus="rgm-4thyear-001">RGM College</option>
+                <!-- ===== Shantiram-45 Stops ===== -->
+                <option value="sr45-stop-01" data-bus="69134ab02313225bf5905fdc">KondaReddy Fort</option>
+                <option value="sr45-stop-02" data-bus="69134ab02313225bf5905fdc">Control Room</option>
+                <option value="sr45-stop-03" data-bus="69134ab02313225bf5905fdc">Sv Complex</option>
+                <option value="sr45-stop-04" data-bus="69134ab02313225bf5905fdc">Railway Station Road</option>
+                <option value="sr45-stop-05" data-bus="69134ab02313225bf5905fdc">Rajhvihar</option>
+                <option value="sr45-stop-06" data-bus="69134ab02313225bf5905fdc">Kurnool Medical College</option>
+                <option value="sr45-stop-07" data-bus="69134ab02313225bf5905fdc">Collector Office</option>
+                <option value="sr45-stop-08" data-bus="69134ab02313225bf5905fdc">Gayathri Estates</option>
+                <option value="sr45-stop-09" data-bus="69134ab02313225bf5905fdc">Maddur Nagar</option>
+                <option value="sr45-stop-10" data-bus="69134ab02313225bf5905fdc">C Camp</option>
+
+              </select>
+            </div>
+          </div>
+
+          <!-- Terms Checkbox -->
+          <div class="form-group form-group--row" style="margin-top: 0.75rem; margin-bottom: 1rem;">
+            <div class="form-checkbox-group">
+              <input type="checkbox" id="terms" name="terms" class="form-checkbox" required checked />
+              <label for="terms" class="form-checkbox-label" style="font-size: 0.85rem;">
+                I agree to the <span style="color: var(--primary);">Terms of Service</span> & <span style="color: var(--primary);">Privacy Policy</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn--primary" style="margin-top: 0.25rem;">
+            <span class="btn__text">Create Account</span>
+          </button>
+
+        </form>
+
+        <!-- Login Link -->
+        <p class="auth-link-text">
+          Already have an account? <a href="login.html">Login here</a>
+        </p>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © 2026 <span class="footer__brand">OmniTrack</span> — Designed & Developed by
+    <a href="https://www.linkedin.com/in/chakridhar-dev/" target="_blank" rel="noopener noreferrer">
+      CHAKRIDHAR K
+    </a>
+  </footer>
+
+  <!-- JS -->
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>

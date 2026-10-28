@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — OmniTrack</title>
+  <meta name="description" content="Log in to OmniTrack to track your RGM College bus in real-time. Access routes, stops, and live location updates." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230ea5e9'/%3E%3Cstop offset='100%25' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'%3EOT%3C/text%3E%3C/svg%3E" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-animated">
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+  </div>
+  <div class="bg-grid"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__brand">
+        <div class="navbar__logo">
+          <i class="fa-solid fa-route"></i>
+        </div>
+        <span class="navbar__name">OmniTrack</span>
+      </a>
+
+      <button class="navbar__toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="navbar__links" id="navLinks">
+        <li><a href="index.html" class="navbar__link">Home</a></li>
+        <li><a href="dashboard.html" class="navbar__link"><i class="fa-solid fa-satellite-dish" style="color: var(--primary); margin-right: 4px;"></i> Live Tracker</a></li>
+        <li><a href="login.html" class="navbar__link navbar__link--outline active">Login</a></li>
+        <li><a href="signup.html" class="navbar__link navbar__link--primary">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Auth Layout: Split Screen -->
+  <div class="auth-layout">
+
+    <!-- Left: Hero Panel -->
+    <aside class="auth-hero">
+      <div class="auth-hero__content">
+        <div class="auth-hero__icon">
+          <i class="fa-solid fa-bus"></i>
+        </div>
+
+        <h2 class="auth-hero__title">Welcome Back!</h2>
+        <p class="auth-hero__subtitle">
+          Track your RGM College bus in real-time. Know exactly when your ride arrives — no more guessing.
+        </p>
+
+        <div class="auth-hero__features">
+          <div class="auth-hero__feature">
+            <i class="fa-solid fa-location-crosshairs"></i>
+            <span>Live GPS bus tracking on map</span>
+          </div>
+          <div class="auth-hero__feature">
+            <i class="fa-solid fa-clock"></i>
+            <span>Real-time ETA at your stop</span>
+          </div>
+          <div class="auth-hero__feature">
+            <i class="fa-solid fa-bell"></i>
+            <span>Smart arrival notifications</span>
+          </div>
+          <div class="auth-hero__feature">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Secure role-based access</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right: Login Form -->
+    <main class="auth-form-panel">
+      <div class="auth-card" role="main">
+
+        <div class="auth-card__header">
+          <h1 class="auth-card__title">Login</h1>
+          <p class="auth-card__subtitle">Enter your credentials to continue</p>
+        </div>
+
+        <form action="/auth/login" method="POST" id="loginForm" novalidate>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="you@example.com"
+              required
+              autocomplete="email"
+            />
+            <span class="form-error">Please enter a valid email address</span>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-input"
+                placeholder="Enter your password"
+                required
+                autocomplete="current-password"
+                minlength="6"
+              />
+              <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                <!-- Eye Open -->
+                <svg class="eye-open" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <!-- Eye Closed -->
+                <svg class="eye-closed" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  style="display: none;">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a19.8 19.8 0 0 1 5.06-6.94" />
+                  <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
+                </svg>
+              </button>
+            </div>
+            <span class="form-error">Password must be at least 6 characters</span>
+          </div>
+
+          <!-- Remember Me & Forgot Password -->
+          <div class="form-group form-group--row">
+            <div class="form-checkbox-group">
+              <input type="checkbox" id="remember" name="remember" class="form-checkbox" />
+              <label for="remember" class="form-checkbox-label">Remember me</label>
+            </div>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn--primary">
+            <span class="btn__text">Login</span>
+          </button>
+
+          <!-- Quick Demo Logins -->
+          <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border-color); text-align: center;">
+            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); display: block; margin-bottom: 0.75rem;">
+              Quick 1-Click Demo Login
+            </span>
+            <div style="display: flex; gap: 0.75rem; justify-content: center;">
+              <button type="button" id="demoStudentBtn" class="btn btn--outline" style="padding: 8px 14px; font-size: 0.8rem;">
+                <i class="fa-solid fa-graduation-cap" style="color: var(--primary);"></i> Student Demo
+              </button>
+              <button type="button" id="demoDriverBtn" class="btn btn--outline" style="padding: 8px 14px; font-size: 0.8rem;">
+                <i class="fa-solid fa-id-badge" style="color: #f59e0b;"></i> Captain Demo
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- Sign Up Link -->
+        <p class="auth-link-text">
+          Don't have an account? <a href="signup.html">Create one</a>
+        </p>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © 2026 <span class="footer__brand">OmniTrack</span> — Designed & Developed by
+    <a href="https://www.linkedin.com/in/chakridhar-dev/" target="_blank" rel="noopener noreferrer">
+      CHAKRIDHAR K
+    </a>
+  </footer>
+
+  <!-- JS -->
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>

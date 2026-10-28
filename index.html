@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OmniTrack — Real-Time College Bus Tracking</title>
+  <meta name="description" content="OmniTrack is a real-time college bus tracking platform for RGM College, Kurnool. Track your bus, view routes, and never miss a ride." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230ea5e9'/%3E%3Cstop offset='100%25' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'%3EOT%3C/text%3E%3C/svg%3E" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-animated">
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+  </div>
+  <div class="bg-grid"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__brand">
+        <div class="navbar__logo">
+          <i class="fa-solid fa-route"></i>
+        </div>
+        <span class="navbar__name">OmniTrack</span>
+      </a>
+
+      <button class="navbar__toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="navbar__links" id="navLinks">
+        <li><a href="dashboard.html" class="navbar__link"><i class="fa-solid fa-satellite-dish" style="color: var(--primary); margin-right: 4px;"></i> Live Tracker</a></li>
+        <li><a href="login.html" class="navbar__link navbar__link--outline">Login</a></li>
+        <li><a href="signup.html" class="navbar__link navbar__link--primary">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Landing Content -->
+  <main class="landing">
+
+    <!-- Hero Section -->
+    <section class="landing__hero">
+      <div class="landing__content">
+
+        <div class="landing__badge animate-in">
+          <i class="fa-solid fa-circle" style="color: var(--success); font-size: 6px;"></i>
+          Live Tracking Available
+        </div>
+
+        <h1 class="landing__title animate-in">
+          Track Your College Bus<br /><span>In Real-Time</span>
+        </h1>
+
+        <p class="landing__description animate-in">
+          Never miss your ride again. OmniTrack gives RGM College students and drivers a seamless, 
+          real-time bus tracking experience — from campus to your doorstep.
+        </p>
+
+        <div class="landing__actions animate-in">
+          <a href="signup.html" class="btn btn--primary" style="width: auto; padding: 14px 32px;">
+            <i class="fa-solid fa-rocket"></i>
+            <span class="btn__text">Create Account</span>
+          </a>
+          <a href="login.html" class="btn btn--outline" style="padding: 14px 32px;">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Login
+          </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="landing__stats">
+          <div class="stat-card animate-in">
+            <div class="stat-card__value">5+</div>
+            <div class="stat-card__label">Bus Routes</div>
+          </div>
+          <div class="stat-card animate-in">
+            <div class="stat-card__value">38+</div>
+            <div class="stat-card__label">Stops Covered</div>
+          </div>
+          <div class="stat-card animate-in">
+            <div class="stat-card__value">24/7</div>
+            <div class="stat-card__label">Live Updates</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <h2 class="features-section__title">Why OmniTrack?</h2>
+      <p class="features-section__subtitle">Built for RGM College students and drivers</p>
+
+      <div class="features-grid">
+        <div class="feature-card animate-in">
+          <div class="feature-card__icon">
+            <i class="fa-solid fa-location-dot"></i>
+          </div>
+          <h3 class="feature-card__title">Live GPS Tracking</h3>
+          <p class="feature-card__desc">See exactly where your bus is on the map. Real-time location updates powered by GPS.</p>
+        </div>
+
+        <div class="feature-card animate-in">
+          <div class="feature-card__icon">
+            <i class="fa-solid fa-bell"></i>
+          </div>
+          <h3 class="feature-card__title">Smart Notifications</h3>
+          <p class="feature-card__desc">Get alerted when your bus is approaching your stop. No more waiting in the dark.</p>
+        </div>
+
+        <div class="feature-card animate-in">
+          <div class="feature-card__icon">
+            <i class="fa-solid fa-route"></i>
+          </div>
+          <h3 class="feature-card__title">Route Management</h3>
+          <p class="feature-card__desc">Multiple bus routes with all stops mapped. Choose your route and track with ease.</p>
+        </div>
+
+        <div class="feature-card animate-in">
+          <div class="feature-card__icon">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3 class="feature-card__title">Safe & Secure</h3>
+          <p class="feature-card__desc">Role-based access for students and drivers. Your data stays protected at all times.</p>
+        </div>
+
+        <div class="feature-card animate-in">
+          <div class="feature-card__icon">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+          </div>
+          <h3 class="feature-card__title">Mobile Friendly</h3>
+          <p class="feature-card__desc">Fully responsive design that works perfectly on any device — phone, tablet, or desktop.</p>
+        </div>
+
+        <div class="feature-card animate-in">
+          <div class="feature-card__icon">
+            <i class="fa-solid fa-users-gear"></i>
+          </div>
+          <h3 class="feature-card__title">Driver Dashboard</h3>
+          <p class="feature-card__desc">Drivers get their own dashboard to manage routes, share location, and coordinate pickups.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © 2026 <span class="footer__brand">OmniTrack</span> — Designed & Developed by
+    <a href="https://www.linkedin.com/in/chakridhar-dev/" target="_blank" rel="noopener noreferrer">
+      CHAKRIDHAR K
+    </a>
+  </footer>
+
+  <!-- JS -->
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>

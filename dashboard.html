@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — OmniTrack</title>
+  <meta name="description" content="OmniTrack Live Bus Tracking Dashboard. Monitor your college bus route, driver location, and arrival ETA in real time." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%230ea5e9'/%3E%3Cstop offset='100%25' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Ctext x='50' y='68' font-size='50' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'%3EOT%3C/text%3E%3C/svg%3E" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Leaflet CSS & JS for Interactive Live GPS Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <style>
+    /* Live GPS Map & Telemetry HUD */
+    #liveGpsMap {
+      height: 480px;
+      width: 100%;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      margin-bottom: 1.5rem;
+      z-index: 1;
+      background: #f8fafc;
+    }
+
+    .leaflet-popup-content-wrapper {
+      background: rgba(15, 23, 42, 0.95) !important;
+      color: #f8fafc !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      border-radius: var(--radius-md) !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+      backdrop-filter: blur(12px) !important;
+      font-family: 'Inter', sans-serif !important;
+    }
+    .leaflet-popup-tip {
+      background: rgba(15, 23, 42, 0.95) !important;
+    }
+    .leaflet-container {
+      font-family: 'Inter', sans-serif !important;
+    }
+
+    .telemetry-hud {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding: 1.25rem;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+    }
+
+    .hud-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hud-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .hud-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .hud-value.highlight {
+      color: var(--primary);
+    }
+
+    .hud-value.success {
+      color: var(--success);
+    }
+
+    .map-controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .bus-map-beacon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #0ea5e9;
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 16px #0ea5e9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 11px;
+      animation: pulse-beacon 1.5s infinite;
+    }
+
+    @keyframes pulse-beacon {
+      0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); }
+      70% { box-shadow: 0 0 0 18px rgba(14, 165, 233, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+    }
+
+    /* Dashboard specific layout enhancements */
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 90px auto 40px auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      padding: 2rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      margin-bottom: 2rem;
+    }
+
+    .dash-user-info {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .dash-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      color: white;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .dash-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .dash-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: rgba(14, 165, 233, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+    }
+
+    .dash-badge--driver {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .dash-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dash-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .dash-card__title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .dash-card__icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      background: rgba(14, 165, 233, 0.1);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .dash-card__value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .dash-card__detail {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Live Route Tracker Section */
+    .map-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .map-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: var(--radius-full);
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: pulse-live 1.5s infinite;
+    }
+
+    @keyframes pulse-live {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.5; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .route-visualizer {
+      position: relative;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.5rem;
+      overflow-x: auto;
+    }
+
+    .route-timeline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 750px;
+      position: relative;
+      padding: 3rem 1rem;
+    }
+
+    .route-line {
+      position: absolute;
+      top: 50%;
+      left: 3rem;
+      right: 3rem;
+      height: 4px;
+      background: var(--border-color);
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .route-line-progress {
+      position: absolute;
+      top: 50%;
+      left: 3rem;
+      width: 45%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transform: translateY(-50%);
+      z-index: 2;
+      transition: width 1s ease-in-out;
+    }
+
+    .route-bus-marker {
+      position: absolute;
+      top: 50%;
+      left: calc(3rem + 45% - 20px);
+      transform: translateY(-50%);
+      z-index: 5;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: var(--shadow-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.1rem;
+      animation: bus-bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bus-bounce {
+      0%, 100% { transform: translateY(-50%) scale(1); }
+      50% { transform: translateY(-60%) scale(1.08); }
+    }
+
+    .stop-node {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100px;
+    }
+
+    .stop-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 3px solid var(--border-color);
+      margin-bottom: 0.75rem;
+      transition: all 0.3s;
+    }
+
+    .stop-node.passed .stop-circle {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .stop-node.current .stop-circle {
+      background: var(--accent);
+      border-color: #fff;
+      box-shadow: 0 0 12px var(--accent);
+      transform: scale(1.25);
+    }
+
+    .stop-name {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      max-width: 90px;
+      word-wrap: break-word;
+    }
+
+    .stop-node.current .stop-name {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .stop-time {
+      font-size: 0.7rem;
+      color: var(--primary);
+      margin-top: 0.2rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-animated">
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+  </div>
+  <div class="bg-grid"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__brand">
+        <div class="navbar__logo">
+          <i class="fa-solid fa-route"></i>
+        </div>
+        <span class="navbar__name">OmniTrack</span>
+      </a>
+
+      <button class="navbar__toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="navbar__links" id="navLinks">
+        <li><a href="dashboard.html" class="navbar__link active">Dashboard</a></li>
+        <li><a href="index.html" class="navbar__link">Home</a></li>
+        <li>
+          <button id="logoutBtn" class="btn btn--outline" style="padding: 8px 16px; font-size: 0.85rem;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Logout</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Dashboard Container -->
+  <main class="dashboard-container">
+
+    <!-- Header / Welcome Card -->
+    <header class="dash-header">
+      <div class="dash-user-info">
+        <div class="dash-avatar" id="userAvatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div>
+          <h1 class="dash-title" id="welcomeName">Welcome, Student!</h1>
+          <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+            <span class="dash-badge" id="roleBadge">
+              <i class="fa-solid fa-graduation-cap"></i> Student
+            </span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);" id="userEmail">student@rgmcet.edu.in</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem;">
+        <button id="refreshStatsBtn" class="btn btn--outline" style="padding: 10px 18px; font-size: 0.85rem;">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Quick Stat Cards -->
+    <section class="dash-grid">
+      <!-- Bus Route Card -->
+      <div class="dash-card">
+        <div class="dash-card__header">
+          <span class="dash-card__title">Assigned Bus</span>
+          <div class="dash-card__icon"><i class="fa-solid fa-bus"></i></div>
+        </div>
+        <div class="dash-card__value" id="cardBusName">RGM-4thYear</div>
+        <div class="dash-card__detail">Registration: <strong id="busRegNo">AP 21 TZ 4509</strong></div>
+      </div>
+
+      <!-- Stop Card -->
+      <div class="dash-card">
+        <div class="dash-card__header">
+          <span class="dash-card__title">Your Boarding Stop</span>
+          <div class="dash-card__icon"><i class="fa-solid fa-location-dot"></i></div>
+        </div>
+        <div class="dash-card__value" id="cardStopName">KondaReddy Fort</div>
+        <div class="dash-card__detail">Estimated Arrival: <strong style="color: var(--success);" id="cardEta">8 mins</strong></div>
+      </div>
+
+      <!-- Driver & Speed Card -->
+      <div class="dash-card">
+        <div class="dash-card__header">
+          <span class="dash-card__title">Captain / Telemetry</span>
+          <div class="dash-card__icon"><i class="fa-solid fa-gauge-high"></i></div>
+        </div>
+        <div class="dash-card__value" id="cardDriverSpeed">38 km/h</div>
+        <div class="dash-card__detail">Driver: <strong id="cardDriverName">Ramesh Kumar (9848022338)</strong></div>
+      </div>
+    </section>
+
+    <!-- Live Route Visualizer -->
+    <section class="map-panel">
+      <div class="map-header">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">
+            <i class="fa-solid fa-satellite-dish" style="color: var(--primary); margin-right: 8px;"></i>
+            Live Transit Tracker
+          </h2>
+          <p style="font-size: 0.85rem; color: var(--text-secondary);">
+            Tracking <strong id="liveRouteName">RGM-4thYear</strong> along its transit schedule to RGM College campus
+          </p>
+        </div>
+
+        <div class="map-status-pill">
+          <div class="pulse-dot"></div>
+          <span>GPS Signal Strong &bull; Live</span>
+        </div>
+      </div>
+
+      <!-- Telemetry HUD -->
+      <div class="telemetry-hud">
+        <div class="hud-item">
+          <span class="hud-label"><i class="fa-solid fa-location-crosshairs" style="color: var(--primary);"></i> GPS Coordinates</span>
+          <span class="hud-value highlight" id="hudCoords">15.8281° N, 78.0373° E</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label"><i class="fa-solid fa-gauge" style="color: #f59e0b;"></i> Live Speed</span>
+          <span class="hud-value" id="hudSpeed">42 km/h</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label"><i class="fa-solid fa-compass" style="color: #6366f1;"></i> Heading</span>
+          <span class="hud-value" id="hudHeading">118° ESE</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label"><i class="fa-solid fa-hourglass-half" style="color: var(--success);"></i> ETA Countdown</span>
+          <span class="hud-value success" id="hudCountdown">07m 45s</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label"><i class="fa-solid fa-satellite" style="color: var(--primary);"></i> Satellites</span>
+          <span class="hud-value" id="hudSatellites">9 Locked</span>
+        </div>
+      </div>
+
+      <!-- Map Controls Bar -->
+      <div class="map-controls-bar">
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button id="toggleGpsTrackingBtn" class="btn btn--primary" style="padding: 8px 16px; font-size: 0.85rem;">
+            <i class="fa-solid fa-circle-play"></i>
+            <span>Auto-Track GPS (Live: ON)</span>
+          </button>
+          <button id="centerMapBtn" class="btn btn--outline" style="padding: 8px 16px; font-size: 0.85rem;">
+            <i class="fa-solid fa-crosshairs"></i>
+            <span>Center on Bus</span>
+          </button>
+          <button id="fitRouteBtn" class="btn btn--outline" style="padding: 8px 16px; font-size: 0.85rem;">
+            <i class="fa-solid fa-expand"></i>
+            <span>Full Route</span>
+          </button>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+          Next Stop: <strong style="color: var(--text-primary);" id="hudNextStop">Nandyal Checkpost</strong>
+        </div>
+      </div>
+
+      <!-- Interactive Leaflet Live GPS Map -->
+      <div id="liveGpsMap"></div>
+
+      <!-- Route Visualizer Line -->
+      <div class="route-visualizer">
+        <div class="route-timeline">
+          <div class="route-line"></div>
+          <div class="route-line-progress" id="routeProgress" style="width: 48%;"></div>
+          <div class="route-bus-marker" id="routeBusMarker" style="left: calc(3rem + 48% - 20px);">
+            <i class="fa-solid fa-bus"></i>
+          </div>
+
+          <!-- Key Stops Nodes -->
+          <div class="stop-node passed">
+            <div class="stop-circle"></div>
+            <span class="stop-name">Railway Station</span>
+            <span class="stop-time">07:45 AM</span>
+          </div>
+
+          <div class="stop-node passed">
+            <div class="stop-circle"></div>
+            <span class="stop-name">Control Room</span>
+            <span class="stop-time">07:55 AM</span>
+          </div>
+
+          <div class="stop-node current">
+            <div class="stop-circle"></div>
+            <span class="stop-name" id="currentStopLabel">KondaReddy Fort</span>
+            <span class="stop-time" style="color: var(--accent);">NOW ARRIVING</span>
+          </div>
+
+          <div class="stop-node">
+            <div class="stop-circle"></div>
+            <span class="stop-name">Nandyal Checkpost</span>
+            <span class="stop-time">08:15 AM</span>
+          </div>
+
+          <div class="stop-node">
+            <div class="stop-circle"></div>
+            <span class="stop-name">Nannur</span>
+            <span class="stop-time">08:35 AM</span>
+          </div>
+
+          <div class="stop-node">
+            <div class="stop-circle"></div>
+            <span class="stop-name">RGM College</span>
+            <span class="stop-time">08:50 AM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Footer -->
+      <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">
+          <i class="fa-solid fa-circle-info" style="color: var(--primary); margin-right: 6px;"></i>
+          Next stop: <strong>Nandyal Checkpost</strong> in approximately 12 minutes.
+        </span>
+
+        <button id="simTripBtn" class="btn btn--outline" style="padding: 8px 16px; font-size: 0.8rem;">
+          <i class="fa-solid fa-play"></i> Simulate Next Stop
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © 2026 <span class="footer__brand">OmniTrack</span> — Designed & Developed by
+    <a href="https://www.linkedin.com/in/chakridhar-dev/" target="_blank" rel="noopener noreferrer">
+      CHAKRIDHAR K
+    </a>
+  </footer>
+
+  <!-- Route Geometry Data & App JS -->
+  <script src="js/route-data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+[
+    {
+        "name":  "KondaReddy Fort (Kurnool)",
+        "lat":  15.82811,
+        "lng":  78.03729,
+        "time":  "07:30 AM",
+        "etaSec":  360
+    },
+    {
+        "name":  "Control Room \u0026 Rajvihar",
+        "lat":  15.82308,
+        "lng":  78.04021,
+        "time":  "07:38 AM",
+        "etaSec":  540
+    },
+    {
+        "name":  "Sv Complex \u0026 Station Road",
+        "lat":  15.81639,
+        "lng":  78.04084,
+        "time":  "07:44 AM",
+        "etaSec":  720
+    },
+    {
+        "name":  "Medical College \u0026 C Camp",
+        "lat":  15.79945,
+        "lng":  78.05045,
+        "time":  "07:52 AM",
+        "etaSec":  900
+    },
+    {
+        "name":  "Nandyal Checkpost",
+        "lat":  15.79107,
+        "lng":  78.05348,
+        "time":  "08:00 AM",
+        "etaSec":  1100
+    },
+    {
+        "name":  "G. Pullareddy Engg College",
+        "lat":  15.77028,
+        "lng":  78.06138,
+        "time":  "08:08 AM",
+        "etaSec":  1300
+    },
+    {
+        "name":  "B. Thandrapadu Junction",
+        "lat":  15.71166,
+        "lng":  78.11804,
+        "time":  "08:15 AM",
+        "etaSec":  1500
+    },
+    {
+        "name":  "Raaga Mayuri Highway Resorts",
+        "lat":  15.70416,
+        "lng":  78.13277,
+        "time":  "08:22 AM",
+        "etaSec":  1750
+    },
+    {
+        "name":  "NH 40 Orvakal Rock Garden",
+        "lat":  15.6834,
+        "lng":  78.17421,
+        "time":  "08:32 AM",
+        "etaSec":  2100
+    },
+    {
+        "name":  "Nannur Bus Stop",
+        "lat":  15.68151,
+        "lng":  78.17471,
+        "time":  "08:42 AM",
+        "etaSec":  2500
+    },
+    {
+        "name":  "Gutupalli Tollway (NH 40)",
+        "lat":  15.65347,
+        "lng":  78.1764,
+        "time":  "08:50 AM",
+        "etaSec":  2900
+    },
+    {
+        "name":  "Hussainapuram Junction",
+        "lat":  15.54718,
+        "lng":  78.29996,
+        "time":  "08:58 AM",
+        "etaSec":  3300
+    },
+    {
+        "name":  "Kalvabugga Milestone",
+        "lat":  15.54288,
+        "lng":  78.30915,
+        "time":  "09:08 AM",
+        "etaSec":  3800
+    },
+    {
+        "name":  "Panyam Bypass (NH 40)",
+        "lat":  15.49439,
+        "lng":  78.41112,
+        "time":  "09:22 AM",
+        "etaSec":  4400
+    },
+    {
+        "name":  "Santiram Hospital \u0026 Medical College",
+        "lat":  15.48775,
+        "lng":  78.47781,
+        "time":  "09:32 AM",
+        "etaSec":  4900
+    },
+    {
+        "name":  "RGM College (RGMCET) Campus",
+        "lat":  15.48586,
+        "lng":  78.48392,
+        "time":  "09:45 AM",
+        "etaSec":  0
+    }
+]
