@@ -4,7 +4,10 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688?logo=fastapi)
 ![SQLite](https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite)
 ![Leaflet](https://img.shields.io/badge/Leaflet.js-Interactive%20Maps-199900?logo=leaflet)
+![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live%20Demo-success?logo=github)
 ![License](https://img.shields.io/badge/License-MIT-green)
+
+> 🚀 **Live Demo on GitHub Pages:** **[Click Here to Open OmniTrack Portal](https://chakridhar534.github.io/OmniTrack-Real-Time-Bus-Trip-Supervision-Web-Portal/)** *(Instant in-browser access, no server installation needed!)*
 
 **OmniTrack** is a full-stack, real-time college bus tracking and trip supervision web platform tailored for institutional transit operations (specifically designed around the **Kurnool to RGM College, Nandyal route along NH 40**).
 
@@ -104,13 +107,19 @@ The server will automatically initialize `omnitrack.db` with sample seed account
 
 ## 🌐 Application URLs
 
-Once the server is running, open your browser:
+### Option 1: Live Cloud Version (GitHub Pages)
+Test and explore the application directly in your browser without any setup:
+- 🏠 **Homepage:** [Open OmniTrack](https://chakridhar534.github.io/OmniTrack-Real-Time-Bus-Trip-Supervision-Web-Portal/index.html)
+- 🛰️ **Live Bus Tracker Dashboard:** [Open Live Dashboard](https://chakridhar534.github.io/OmniTrack-Real-Time-Bus-Trip-Supervision-Web-Portal/dashboard.html)
+- 🔐 **Sign In (with 1-Click Demos):** [Open Login](https://chakridhar534.github.io/OmniTrack-Real-Time-Bus-Trip-Supervision-Web-Portal/login.html)
+- 📝 **Create Account:** [Open Registration](https://chakridhar534.github.io/OmniTrack-Real-Time-Bus-Trip-Supervision-Web-Portal/signup.html)
 
-- **Homepage:** [http://localhost:8000/index.html](http://localhost:8000/index.html)
-- **Live Dashboard:** [http://localhost:8000/dashboard.html](http://localhost:8000/dashboard.html)
-- **Sign In:** [http://localhost:8000/login.html](http://localhost:8000/login.html)
-- **Registration:** [http://localhost:8000/signup.html](http://localhost:8000/signup.html)
-- **Interactive API Documentation (Swagger UI):** [http://localhost:8000/docs](http://localhost:8000/docs)
+### Option 2: Local Python Server (Localhost)
+When running the full-stack server on your own computer (after starting `start_server.bat` or `python server.py`):
+- **Local Website:** `http://localhost:8000/index.html`
+- **Local Dashboard:** `http://localhost:8000/dashboard.html`
+- **Interactive Swagger API Docs:** `http://localhost:8000/docs`
+*(Note: `localhost` URLs only work when the server is actively running on your local machine).*
 
 ---
 
