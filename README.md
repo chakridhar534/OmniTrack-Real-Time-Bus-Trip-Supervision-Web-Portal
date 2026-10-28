@@ -143,3 +143,4 @@ The backend seeds demo accounts upon the first run for testing:
 ## 👤 Author
 
 - **CHAKRIDHAR K** - [chakridhar534](https://github.com/chakridhar534)
+

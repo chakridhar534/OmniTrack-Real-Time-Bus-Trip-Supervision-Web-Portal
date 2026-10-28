@@ -2,9 +2,65 @@
    OmniTrack — Shared Application JavaScript
    ============================================ */
 
-const API_BASE = (window.location.protocol.startsWith('http') && window.location.port === '8000')
+const isHttps = window.location.protocol === 'https:';
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE = (isLocalhost && window.location.port === '8000')
   ? window.location.origin
-  : 'http://localhost:8000';
+  : (isLocalhost ? 'http://localhost:8000' : '');
+
+// Fallback Bus and Demo Accounts for Static / GitHub Pages Mode
+const FALLBACK_BUS_NAMES = {
+  "rgm-1styear-001": "RGM-1stYear",
+  "rgm-2ndyear-001": "RGM-2ndYear",
+  "rgm-3rdyear-001": "RGM-3rdYear",
+  "rgm-4thyear-001": "RGM-4thYear",
+  "69120a57d863945152d75cdc": "RGM-3rdYear",
+  "69134ab02313225bf5905fdc": "Shantiram-45"
+};
+
+const DEMO_ACCOUNTS = {
+  "student@rgmcet.edu.in": {
+    id: 1,
+    name: "CHAKRIDHAR K",
+    email: "student@rgmcet.edu.in",
+    role: "USER",
+    phone: "9876543210",
+    bus_id: "rgm-4thyear-001",
+    bus_name: "RGM-4thYear",
+    stop_id: "rgm4y-stop-01",
+    stop_name: "KondaReddy Fort"
+  },
+  "driver@rgmcet.edu.in": {
+    id: 2,
+    name: "Ramesh Kumar (Captain)",
+    email: "driver@rgmcet.edu.in",
+    role: "DRIVER",
+    phone: "9848022338",
+    bus_id: "rgm-4thyear-001",
+    bus_name: "RGM-4thYear",
+    stop_id: null,
+    stop_name: null
+  }
+};
+
+function getLocalUsers() {
+  try {
+    const raw = localStorage.getItem('omnitrack_registered_users');
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveLocalUser(user) {
+  try {
+    const users = getLocalUsers();
+    users.push(user);
+    localStorage.setItem('omnitrack_registered_users', JSON.stringify(users));
+  } catch (e) {
+    console.warn('Could not save user locally', e);
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
@@ -270,7 +326,6 @@ async function handleAuthSubmit(form, endpoint, loadingMessage) {
   }
 
   const submitBtn = form.querySelector('button[type="submit"], .btn--primary');
-  const originalBtnContent = submitBtn ? submitBtn.innerHTML : '';
   
   if (submitBtn) {
     submitBtn.classList.add('btn--loading');
@@ -284,53 +339,140 @@ async function handleAuthSubmit(form, endpoint, loadingMessage) {
     payload[key] = value;
   });
 
-  try {
-    const url = `${API_BASE}${endpoint}`;
-    console.log(`[OmniTrack] Sending request to ${url}...`, payload);
+  let serverResponded = false;
+  let serverData = null;
 
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
+  // Attempt backend fetch if API_BASE is defined and not blocked by Mixed Content
+  if (API_BASE && (!isHttps || API_BASE.startsWith('https:'))) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
 
-    const data = await res.json().catch(() => ({ detail: 'Failed to parse response' }));
+      const url = `${API_BASE}${endpoint}`;
+      console.log(`[OmniTrack] Connecting to backend ${url}...`, payload);
 
-    if (!res.ok) {
-      const errorMsg = data.detail || data.message || 'Operation failed. Please try again.';
-      showToast(errorMsg, 'error');
-      if (submitBtn) {
-        submitBtn.classList.remove('btn--loading');
-        submitBtn.disabled = false;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      serverData = await res.json().catch(() => ({ detail: 'Failed to parse response' }));
+
+      if (res.ok) {
+        serverResponded = true;
+      } else {
+        const errorMsg = serverData.detail || serverData.message || 'Operation failed. Please try again.';
+        showToast(errorMsg, 'error');
+        if (submitBtn) {
+          submitBtn.classList.remove('btn--loading');
+          submitBtn.disabled = false;
+        }
+        return;
       }
-      return;
+    } catch (err) {
+      console.log('[OmniTrack] Backend unavailable, seamlessly switching to Web Mode.', err);
+      serverResponded = false;
     }
+  }
 
-    // Success: store session
-    if (data.token) {
-      localStorage.setItem('omnitrack_token', data.token);
-    }
-    if (data.user) {
-      localStorage.setItem('omnitrack_user', JSON.stringify(data.user));
-    }
-
-    showToast(data.message || 'Success!', 'success');
-
-    // Smooth redirect to dashboard
+  if (serverResponded && serverData) {
+    if (serverData.token) localStorage.setItem('omnitrack_token', serverData.token);
+    if (serverData.user) localStorage.setItem('omnitrack_user', JSON.stringify(serverData.user));
+    showToast(serverData.message || 'Success!', 'success');
     setTimeout(() => {
       window.location.href = 'dashboard.html';
-    }, 700);
+    }, 600);
+    return;
+  }
 
-  } catch (err) {
-    console.error('[OmniTrack] Network error:', err);
-    showToast(`Unable to connect to local server at ${API_BASE}. Make sure the server is running.`, 'error');
-    if (submitBtn) {
-      submitBtn.classList.remove('btn--loading');
-      submitBtn.disabled = false;
+  // Client-Side Web Fallback Mode (Runs smoothly on GitHub Pages and offline)
+  console.log('[OmniTrack] Processing in Web/Demo Mode for endpoint:', endpoint);
+  const email = (payload.email || '').trim().toLowerCase();
+  const password = payload.password || '';
+
+  if (endpoint.includes('login')) {
+    let matchedUser = DEMO_ACCOUNTS[email];
+
+    if (!matchedUser) {
+      const regUsers = getLocalUsers();
+      const found = regUsers.find(u => u.email === email);
+      if (found) {
+        if (found.password && found.password !== password) {
+          showToast('Incorrect password. Please try again.', 'error');
+          if (submitBtn) {
+            submitBtn.classList.remove('btn--loading');
+            submitBtn.disabled = false;
+          }
+          return;
+        }
+        matchedUser = found;
+      }
     }
+
+    if (!matchedUser) {
+      const isDriver = email.includes('driver') || email.includes('captain');
+      matchedUser = {
+        id: Date.now(),
+        name: isDriver ? "Fleet Captain" : (email.split('@')[0].toUpperCase()),
+        email: email,
+        role: isDriver ? "DRIVER" : "USER",
+        phone: "9876543210",
+        bus_id: "rgm-4thyear-001",
+        bus_name: "RGM-4thYear",
+        stop_id: isDriver ? null : "rgm4y-stop-01",
+        stop_name: isDriver ? null : "KondaReddy Fort"
+      };
+    }
+
+    const token = 'ot_web_' + Math.random().toString(36).substring(2);
+    localStorage.setItem('omnitrack_token', token);
+    localStorage.setItem('omnitrack_user', JSON.stringify(matchedUser));
+
+    showToast('Login successful! Welcome to OmniTrack.', 'success');
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 600);
+
+  } else if (endpoint.includes('signup')) {
+    const role = (payload.role || 'USER').toUpperCase();
+    const busId = (role === 'DRIVER') ? (payload.assignedBus || 'rgm-4thyear-001') : (payload.busName || 'rgm-4thyear-001');
+    const busName = FALLBACK_BUS_NAMES[busId] || busId;
+
+    let stopName = 'KondaReddy Fort';
+    const stopSelect = document.getElementById('stopSelect');
+    if (stopSelect && stopSelect.selectedIndex > 0) {
+      stopName = stopSelect.options[stopSelect.selectedIndex].text;
+    }
+
+    const newUser = {
+      id: Date.now(),
+      name: (payload.name || '').trim() || 'Student User',
+      email: email,
+      password: password,
+      role: role,
+      phone: (payload.phone || '').trim(),
+      bus_id: busId,
+      bus_name: busName,
+      stop_id: payload.stopName || 'rgm4y-stop-01',
+      stop_name: (role === 'USER') ? stopName : null
+    };
+
+    saveLocalUser(newUser);
+
+    const token = 'ot_web_' + Math.random().toString(36).substring(2);
+    localStorage.setItem('omnitrack_token', token);
+    localStorage.setItem('omnitrack_user', JSON.stringify(newUser));
+
+    showToast('Account created successfully! Welcome to OmniTrack.', 'success');
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 600);
   }
 }
 
@@ -395,13 +537,15 @@ function initDashboard() {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
       const token = localStorage.getItem('omnitrack_token');
-      try {
-        await fetch(`${API_BASE}/auth/logout`, {
-          method: 'POST',
-          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-        });
-      } catch (e) {
-        // Ignore network errors on logout
+      if (API_BASE && (!isHttps || API_BASE.startsWith('https:'))) {
+        try {
+          await fetch(`${API_BASE}/auth/logout`, {
+            method: 'POST',
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+          });
+        } catch (e) {
+          // Ignore network errors on logout
+        }
       }
       localStorage.removeItem('omnitrack_token');
       localStorage.removeItem('omnitrack_user');
